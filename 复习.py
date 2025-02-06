@@ -1,3 +1,3 @@
 from turtle import*
-for i in range【5】：
-fd(100)
+for i in range(5):
+    fd(100)

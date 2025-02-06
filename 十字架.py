@@ -1,0 +1,10 @@
+from turtle import *
+fd(200)
+bk(100)
+seth(90)
+fd(100)
+seth(270)
+fd(200)
+rt(180)
+fd(100)
+lt(-90)
