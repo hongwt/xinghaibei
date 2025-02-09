@@ -1,0 +1,6 @@
+name=input('请输入你的姓名:')
+phone=input('请输入你的电话:')
+address=input('请输入你的地址:')
+print('姓名:' + name)
+print('电话:%s'%phone)
+print('地址:%s'%address)
