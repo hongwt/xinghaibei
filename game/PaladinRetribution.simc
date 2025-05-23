@@ -20,7 +20,7 @@ actions.cooldowns+=/execution_sentence,if=(!buff.crusade.up&cooldown.crusade.rem
 
 actions.finishers+=/variable,name=ds_castable,value=(spell_targets.divine_storm>=2|buff.empyrean_power.up|!talent.final_verdict&talent.tempest_of_the_lightbringer)&!buff.empyrean_legacy.up&!(buff.divine_arbiter.up&buff.divine_arbiter.stack>24)
 actions.finishers+=/hammer_of_light,if=buff.hammer_of_light_ready.up|!talent.divine_hammer|buff.divine_hammer.up|cooldown.divine_hammer.remains>10
-actions.finishers+=/divine_hammer,if=!buff.divine_hammer.up & fight_remains>40
+actions.finishers+=/divine_hammer,if=!buff.divine_hammer.up&fight_remains>40
 actions.finishers+=/divine_storm,if=variable.ds_castable&!buff.hammer_of_light_ready.up
 actions.finishers+=/templars_verdict,if=!buff.hammer_of_light_ready.up
 actions.finishers+=/variable,name=finished,op=set,value=true
