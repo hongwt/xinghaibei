@@ -19,6 +19,7 @@ actions+=/ignore_pain,if=(buff.ignore_pain.remains<=1|buff.ignore_pain.value<=25
 actions+=/last_stand,if=(target.health.pct>=90&talent.unnerving_focus.enabled|target.health.pct<=20&talent.unnerving_focus.enabled)|talent.bolster.enabled|set_bonus.tier30_2pc|set_bonus.tier30_4pc
 actions+=/demoralizing_shout,if=talent.booming_voice.enabled
 actions+=/thunder_blast,if=spell_targets.thunder_blast>=2&buff.thunder_blast.stack=2
+actions+=/thunderous_roar
 actions+=/shield_block,if=buff.shield_block.remains<=10
 actions+=/run_action_list,name=aoe,if=spell_targets.thunder_clap>=3
 actions+=/call_action_list,name=generic
