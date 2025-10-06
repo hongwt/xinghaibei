@@ -19,10 +19,10 @@ actions.cooldowns+=/use_item,slot=trinket2,if=!variable.trinket_2_buffs&(trinket
 actions.cooldowns+=/execution_sentence,if=(!buff.crusade.up&cooldown.crusade.remains>15|buff.crusade.stack=10|cooldown.avenging_wrath.remains<0.75|cooldown.avenging_wrath.remains>15|talent.radiant_glory)&(holy_power>=4&time<5|holy_power>=3&time>5|(holy_power>=2|time<5)&(talent.divine_auxiliary|talent.radiant_glory))&(cooldown.divine_hammer.remains>5|buff.divine_hammer.up|!talent.divine_hammer)&(target.time_to_die>8&!talent.executioners_will|target.time_to_die>12)&cooldown.wake_of_ashes.remains<gcd
 
 actions.finishers+=/variable,name=ds_castable,value=(spell_targets.divine_storm>=2|buff.empyrean_power.up)&!buff.empyrean_legacy.up
-actions.finishers+=/hammer_of_light,if=buff.hammer_of_light_ready.up|!talent.divine_hammer|buff.divine_hammer.up|cooldown.divine_hammer.remains>10
+actions.finishers+=/hammer_of_light,if=debuff.execution_sentence.up|buff.crusade.up&buff.crusade.stack=10
 actions.finishers+=/divine_hammer,if=!buff.divine_hammer.up&fight_remains>40&time>3
-actions.finishers+=/divine_storm,if=variable.ds_castable&!buff.hammer_of_light_ready.up
-actions.finishers+=/templars_verdict,if=!buff.hammer_of_light_ready.up
+actions.finishers+=/divine_storm,if=variable.ds_castable
+actions.finishers+=/templars_verdict
 actions.finishers+=/variable,name=finished,op=set,value=true
 
 actions.generators+=/variable,name=finished,op=set,value=false
