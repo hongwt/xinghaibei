@@ -45,5 +45,8 @@ actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.
 actions.slayer+=/raging_blow,if=buff.brutal_finish.up&buff.slaughtering_strikes.stack<5&(!debuff.champions_might.up|debuff.champions_might.up&debuff.champions_might.remains>gcd)
 actions.slayer+=/raging_blow,if=buff.opportunist.up
 actions.slayer+=/raging_blow,if=action.raging_blow.charges=2
-actions.slayer+=/raging_blow
 actions.slayer+=/execute,if=debuff.marked_for_execution.stack>1&buff.enrage.up
+actions.slayer+=/rampage,if=action.raging_blow.charges=0
+actions.slayer+=/execute,if=action.raging_blow.charges=0
+actions.slayer+=/bloodthirst,if=action.raging_blow.charges=0
+actions.slayer+=/raging_blow
