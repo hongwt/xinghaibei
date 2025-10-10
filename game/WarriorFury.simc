@@ -41,8 +41,7 @@ actions.slayer+=/recklessness
 actions.slayer+=/avatar
 actions.slayer+=/whirlwind,if=active_enemies>=2&talent.meat_cleaver&buff.meat_cleaver.stack=0
 actions.slayer+=/rampage,if=buff.enrage.remains<gcd
-actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=15&(buff.avatar.up|cooldown.avatar.remains>=8))
-actions.slayer+=/raging_blow,if=buff.brutal_finish.up&buff.slaughtering_strikes.stack<5&(!debuff.champions_might.up|debuff.champions_might.up&debuff.champions_might.remains>gcd)
+actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=15&(buff.avatar.up|cooldown.avatar.remains>=8))&fight_remains>40&spell_targets.bladestorm>=5
 actions.slayer+=/raging_blow,if=buff.opportunist.up
 actions.slayer+=/raging_blow,if=action.raging_blow.charges=2
 actions.slayer+=/execute,if=debuff.marked_for_execution.stack>1&buff.enrage.up
