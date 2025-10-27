@@ -37,8 +37,8 @@ actions+=/berserking,if=buff.recklessness.up
 ## actions+=/invoke_external_buff,name=power_infusion,if=buff.avatar.remains>15&fight_remains>=135|variable.execute_phase&buff.avatar.up|fight_remains<=25
 actions+=/run_action_list,name=slayer,strict=1
 
-actions.slayer+=/recklessness
-actions.slayer+=/avatar
+actions.slayer+=/recklessness,if=fight_remains>30
+actions.slayer+=/avatar,if=(spell_targets.whirlwind>=5|boss)&fight_remains>30
 actions.slayer+=/whirlwind,if=active_enemies>=2&talent.meat_cleaver&buff.meat_cleaver.stack=0
 actions.slayer+=/rampage,if=buff.enrage.remains<gcd
 actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=15&(buff.avatar.up|cooldown.avatar.remains>=8))&fight_remains>40&spell_targets.bladestorm>=5
