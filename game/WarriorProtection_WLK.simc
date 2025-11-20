@@ -6,7 +6,7 @@
 # 血性狂暴
 actions.precombat+=/bloodrage,use_off_gcd=1,if=rage.deficit>30
 # 战斗怒吼
-actions.precombat+=/battle_shout,if=buff.shout.remains<=30
+actions.precombat+=/battle_shout,if=buff.shout.remains<=60
 # 防御姿态
 actions.precombat+=/defensive_stance,use_off_gcd=1,if=buff.defensive_stance.down&!cooldown.recklessness.up
 
@@ -28,7 +28,6 @@ actions.single+=/heroic_strike,use_off_gcd=1,if=rage.current>=settings.queueing_
 actions.single+=/shield_slam
 # 复仇
 actions.single+=/revenge
-actions.single+=/battle_shout,if=buff.shout.remains<=4&buff.battle_shout.remains<=4
 # 雷霆一击
 actions.single+=/thunder_clap,if=!debuff.attack_speed_reduction.up|(debuff.thunder_clap.up&debuff.attack_speed_reduction.remains<3)
 # 毁灭打击
@@ -40,5 +39,4 @@ actions.aoe+=/cleave,use_off_gcd=1,if=rage.current>=settings.queueing_threshold&
 actions.aoe+=/thunder_clap
 actions.aoe+=/revenge
 actions.aoe+=/shield_slam
-actions.aoe+=/battle_shout,if=assigned_shout.battle_shout&buff.shout.remains<=4&buff.battle_shout.remains<=4
 actions.aoe+=/devastate,if=cooldown.shield_slam.remains&!buff.revenge_usable.up&(action.shield_slam.spend<=rage.current-action.devastate.spend+rage_gain*gcd)
