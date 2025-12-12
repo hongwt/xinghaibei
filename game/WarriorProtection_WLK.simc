@@ -1,0 +1,42 @@
+## Warrior: Protection
+## https://www.wowhead.com/wotlk/guide/classes/warrior/protection/tank-rotation-cooldowns-abilities-pve
+## November 2023
+
+## Precombat
+# 血性狂暴
+actions.precombat+=/bloodrage,use_off_gcd=1,if=rage.deficit>30
+# 战斗怒吼
+actions.precombat+=/battle_shout,if=buff.shout.remains<=60
+# 防御姿态
+actions.precombat+=/defensive_stance,use_off_gcd=1,if=buff.defensive_stance.down&!cooldown.recklessness.up
+
+## Default
+actions+=/call_action_list,name=init
+# 血性狂暴
+actions+=/bloodrage,use_off_gcd=1,if=rage.deficit>30
+actions+=/use_items
+actions+=/run_action_list,name=aoe,if=active_enemies>2
+actions+=/run_action_list,name=single
+
+## Init Vars
+actions.init+=/variable,name=time_to_die,value=(debuff.training_dummy.up&300)|target.time_to_die
+
+## Single
+# 英勇打击
+actions.single+=/heroic_strike,use_off_gcd=1,if=rage.current>=settings.queueing_threshold&rage.current>action.heroic_strike.spend+((cooldown.shield_slam.remains<2)*action.shield_slam.spend)
+# 盾牌猛击
+actions.single+=/shield_slam
+# 复仇
+actions.single+=/revenge
+# 雷霆一击
+actions.single+=/thunder_clap,if=!debuff.attack_speed_reduction.up|(debuff.thunder_clap.up&debuff.attack_speed_reduction.remains<3)
+# 毁灭打击
+actions.single+=/devastate,if=cooldown.shield_slam.remains&!buff.revenge_usable.up&(action.shield_slam.spend<=rage.current-action.devastate.spend+rage_gain*gcd)
+
+## Cleave
+# 顺劈斩
+actions.aoe+=/cleave,use_off_gcd=1,if=rage.current>=settings.queueing_threshold&rage.current>action.cleave.spend+((cooldown.shield_slam.remains<2)*action.shield_slam.spend)
+actions.aoe+=/thunder_clap
+actions.aoe+=/revenge
+actions.aoe+=/shield_slam
+actions.aoe+=/devastate,if=cooldown.shield_slam.remains&!buff.revenge_usable.up&(action.shield_slam.spend<=rage.current-action.devastate.spend+rage_gain*gcd)
