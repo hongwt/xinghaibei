@@ -50,7 +50,7 @@ actions.berserker_stance+=/whirlwind,if=variable.should_whirlwind
 # 鲁莽
 actions.berserker_stance+=/recklessness,if=(buff.death_wish.up|debuff.shattering_throw.up)
 # 斩杀
-actions.berserker_stance+=/execute,if=boss
+actions.berserker_stance+=/execute,if=boss|active_enemies=1
 actions.berserker_stance+=/slam,if=buff.bloodsurge.up
 # 挫志怒吼
 actions.berserker_stance+=/demoralizing_shout,if=settings.debuff_demoshout_enabled&!debuff.demoralizing_shout.up
