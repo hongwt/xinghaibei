@@ -562,6 +562,12 @@ spec:RegisterGlyphs( {
 
 -- Auras
 spec:RegisterAuras( {
+    -- 新增恶意魔印buff不洁之力 by风雪20250413
+    unholy_force = {
+        id = 67383,
+        duration = 20,
+        max_stack = 1,
+    },
     -- Spell damage reduced by $s1%.  Immune to magic debuffs.
     antimagic_shell = {
         id = 48707,
@@ -1021,7 +1027,7 @@ spec:RegisterAbilities( {
         handler = function ()
         end,
 
-        copy = { 49939, 49940, 49941 }
+        copy = { 48721, 49939, 49940, 49941 } --补全各等级技能by风雪 20250901
     },
 
 
@@ -1112,7 +1118,7 @@ spec:RegisterAbilities( {
         startsCombat = false,
         texture = 132728,
 
-        toggle = "defensives",
+        -- toggle = "defensives", 先注释掉，确保白骨之盾在默认技能下，修改 by 风雪20250413
 
         handler = function ()
             applyBuff( "bone_shield", nil, glyph.bone_shield.enabled and 4 or 3 )
@@ -1161,6 +1167,8 @@ spec:RegisterAbilities( {
 
         handler = function ()
         end,
+        copy = { 49158, 51325, 51326, 51327, 51328 } --补全各等级技能by风雪 20250901
+        
     },
 
 
@@ -1314,7 +1322,7 @@ spec:RegisterAbilities( {
     },
 
 
-    -- A deadly attack that deals 75% weapon damage plus 223 and heals the Death Knight for 5% of her maximum health for each of her diseases on the target.
+    -- 灵界打击A deadly attack that deals 75% weapon damage plus 223 and heals the Death Knight for 5% of her maximum health for each of her diseases on the target.
     death_strike = {
         id = 49998,
         cast = 0,
@@ -1430,6 +1438,7 @@ spec:RegisterAbilities( {
             removeStack( "killing_machine" )
             removeBuff( "deathchill" )
         end,
+        copy = { 49143, 51416, 51417, 51418, 51419, 55268 } --补全各等级技能by风雪 20250901
     },
 
 
@@ -1481,6 +1490,8 @@ spec:RegisterAbilities( {
         handler = function ()
             if glyph.heart_strike.enabled then applyDebuff( "target", "glyph_of_heart_strike" ) end
         end,
+        copy = { 55050, 55258, 55259, 55260, 55261, 55262 } --补全各等级技能by风雪 20250901
+
     },
 
 
@@ -1500,6 +1511,7 @@ spec:RegisterAbilities( {
         handler = function ()
             applyBuff( "horn_of_winter" )
         end,
+        copy = { 57330, 57623 } --补全各等级技能by风雪 20250901
     },
 
 
@@ -1538,6 +1550,8 @@ spec:RegisterAbilities( {
                 active_dot.frost_fever = active_enemies
             end
         end,
+        copy = { 49184, 51409, 51410, 51411 } --补全各等级技能by风雪 20250901
+
     },
 
 
@@ -1592,8 +1606,9 @@ spec:RegisterAbilities( {
         cooldown = 0,
         gcd = "spell",
 
-        spend = 1,
-        spendType = "frost_runes",
+        -- spend = 1,
+        spend = function() return death_runes > 0 and 0 or 1 end,  -- 当存在死亡符文时不消耗冰霜符文，修改 by 风雪20250412     
+        spendType = "frost_runes",   
 
         gain = function() return 10 + ( 2.5 * talent.chill_of_the_grave.rank ) end,
         gainType = "runic_power",
@@ -1676,16 +1691,32 @@ spec:RegisterAbilities( {
     },
 
 
-    -- A brutal instant attack that deals 80% weapon damage plus 467, total damage increased 12.5% per each of your diseases on the target, but consumes the diseases.
+    -- 湮没A brutal instant attack that deals 80% weapon damage plus 467, total damage increased 12.5% per each of your diseases on the target, but consumes the diseases.
     obliterate = {
         id = 49020,
         cast = 0,
         cooldown = 0,
         gcd = "spell",
 
-        spend = 1,
+        -- spend = 1,
+        --修改湮灭条件：第一优先级：冰霜≥1 且 邪恶≥1 → 返回 1；第二优先级：冰霜≥1 且 邪恶=0 且 死亡≥1 → 返回 1；第三优先级：冰霜=0 且 邪恶≥1 且 死亡≥1 → 返回 0；第四优先级：冰霜=0 且 邪恶=0 且 死亡≥2 → 返回 0；默认情况：返回 1  by风雪20250724
+        spend = function()
+            return (frost_runes.current >= 1 and unholy_runes.current >= 1) and 1 or
+            (frost_runes.current >= 1 and unholy_runes.current == 0 and death_runes >= 1) and 1 or
+            (frost_runes.current == 0 and unholy_runes.current >= 1 and death_runes >= 1) and 0 or
+            (frost_runes.current == 0 and unholy_runes.current == 0 and death_runes >= 2) and 0 or 1
+        end,
+
         spendType = "frost_runes",
-        spend2 = 1,
+        -- spend2 = 1,
+        --修改湮灭条件：第一优先级：冰霜≥1 且 邪恶≥1 → 返回 1；第二优先级：冰霜≥1 且 邪恶=0 且 死亡≥1 → 返回 0；第三优先级：冰霜=0 且 邪恶≥1 且 死亡≥1 → 返回 1；第四优先级：冰霜=0 且 邪恶=0 且 死亡≥2 → 返回 0；默认情况：返回 1  by风雪20250724        
+        spend2 = function()
+            return (frost_runes.current >= 1 and unholy_runes.current >= 1) and 1 or
+            (frost_runes.current >= 1 and unholy_runes.current == 0 and death_runes >= 1) and 0 or
+            (frost_runes.current == 0 and unholy_runes.current >= 1 and death_runes >= 1) and 1 or
+            (frost_runes.current == 0 and unholy_runes.current == 0 and death_runes >= 2) and 0 or 1
+        end,      
+        
         spend2Type = "unholy_runes",
 
         gain = function() return 15 + ( 2.5 * talent.chill_of_the_grave.rank ) end,
@@ -1821,10 +1852,10 @@ spec:RegisterAbilities( {
             return true
         end,
 
-        toggle = function()
-            if talent.master_of_ghouls.enabled then return end
-            return "cooldowns"
-        end,
+        -- toggle = function() --- 取消亡者复生天赋切换群组功能，因插件不能在切换后自动重置，需要手动rl下，怕遗忘。 by 风雪20250414
+        --    if talent.master_of_ghouls.enabled then return end
+        --    return "cooldowns"
+        -- end,
 
         usable = function() return not pet.up, "cannot have a pet" end,
 
@@ -1900,6 +1931,8 @@ spec:RegisterAbilities( {
         handler = function ()
             -- TODO: talent.desecration effect?
         end,
+
+        copy = { 55090, 55265, 55270, 55271 } --添加高等级技能，by风雪 20250731
     },
 
 
@@ -1969,7 +2002,7 @@ spec:RegisterAbilities( {
         startsCombat = false,
         texture = 132388,
 
-        toggle = "cooldowns",
+        -- toggle = "cooldowns", 取消加入爆发循环组，改为默认循环组 by风雪 20250803
 
         handler = function ()
             applyBuff( "unbreakable_armor" )
@@ -2057,7 +2090,9 @@ spec:RegisterOptions( {
     damage = true,
     damageExpiration = 6,
 
-    package = "鲜血(IV)",
+    potion = "speed",
+
+    package = "血冰(黑科研)",
     usePackSelector = true
 } )
 
@@ -2065,28 +2100,83 @@ spec:RegisterPack( "双持邪(新手盒子)", 20241209, [[Hekili:TV1wVTTrw4Flgfq
 
 spec:RegisterPack( "鲜血(IV)", 20230411, [[Hekili:vEvBVTjsq4FlrvkXUoMaoV0xKDQUEN0PK7uQuDuV7taRH1MvgZYblX1vw7V9Bgadl4DDB(sIHz25LNzMNzX1X9z35Heb19Pj2tU2(ghhlhBhNjV3DUyxk1DEkjynzf8JeYg4VFoMZdL(dE4Bdrz7I5Kq0g58ISaqEKqKM)XRUA72TwSGDJFHYsYTc4BUAlxeVECqmjpNfC1c0oJdPer041jSvrIXcsY6XPVqhNXfebJNmoGZJd5BtYhtwWIzcgn3D(IcwS4He3f6d87GyjLg4(e8JiwyiTstAEG78NJy5s)0mgpJj2j9XNwqYPqcXtK(IiQ0)HaqW3WOw6VQGfsTCNhZYf5yws4u4FpvIAKamgrtd5Ghjj0lKgq25oNMqwetdD)SRacou123mpa8mnJrGZXfwlZ45cVL0xOzwcwWAwYkP)5sFuwjc5Lgtwvq7iCG0h99luVEMq6pQJivli9Ncjywb1RwbAcDdGNs)3k9Ni9h2MqP0CblMMaLtibUUxcCqlO46j4fbrQ50zvHUM0c0Axqm1tqYwrbWeWqW43yW4vXSxUiJTMQXb6Wg9E4wJ4FeLelISsdes)7L(3z3dCBaO7lbO97L(G3feazewWHZe1XNvT57aIvr4colgJI7mgf9DguLUU1kQUbTZ7mANSIewGxkFla5H0LSaMO0ytS73Pguftc85LKIyXrD0ByqZ8Ymk9h0xr382eL4MNL4Xx6TLLaY11g1EsbBtv35K(r6QmwQUUe91WPZWIyFB0ID3QMIf5upWiBY7LG31rPKiE8oejs(r)5AZvcnTpoaNeehbceOBmpuY8Q(ThsWurZ4vrZIenG2V)KShgziosygfsI8i0ovDY)mYhvzkh2ejXhmgNMzeQcKkbauqZTWobGtXBd57LneRcc1X3GOO9pZH6zi0ZVGg0XObRS0VqewPOInnpTu33guKb9wIgEBEILAxlYYexIuGRQpsPN1uK(v2EyE2WX84jqiUkExAuTffK0w(oSaQHgDyzuOIBnjkmJA3hXatwgd3Oo7HNRH)VZKNtNb5omK9u0mR7RMT8jN3P61oL6EE18m7adGYOUJbQVVMcQNGH95lPBkZLs982sjPWllP4tZOWDVwqAj513JxSCPfOBooqB1LlVk0oiS0SGHHEUCumE7Rj2FyYDwq4SLKLa9zaP6)8BF9PhE6p)O0x6)mETkgeHzqOVKdxt5cGE7cPFg9)kyzyJuoh3bqke8nWv6GxeerswbPS8X)MLaIUfS0VZtaVwk(I61W)lyfbx55d9MW7h489HW5Lp(qPRXJD9HXmPF5v6aXqEwiG1vUZBV4hcB8LmKU7nVr6xFL3)a7hK()v5LvXBa3O)q5JOE49qhBFZyhh0Rvok3QPcmA2vDHYlzlNDmWRCw4ekRIvFD39ROHQoARgTBqrPiV10jhlVQdg1ODmE6mygwrZMvLDEP6Qrvb9wQDjUoBguUVSAb4mh0zDxrEVJQbAxSuLw6PYo)uR42V3a745Ny1MAm0SRbdHZmyS97nS7AkSvOtgPUSPXIAxERCkvkMYof9RH67md11AQJrNylZ02nmhHtgrDJboqQJUFGHDh7332WD)D2dpxdX4m7EnwhWWotck8)hJdi7nggA47NoX2eCxno)8x(JV8rCShMW2uscvZa81c8HCMOO8RuTQu3q3ZN(0NuDJgI6syst6psZoHr62hmeNSBjCGHTM8V5Rs7l(4PSxt5(8b1tW9o4iLxREUPA(WZ3ozy)GQf468LCvCgMgdpkZ6mTzYqNSjU2sTFcxxcsOFTbaoqHnz)(Z08PHhLIQcpMjC616lJNUnUCHS7)p]] )
 
-spec:RegisterPack( "冰霜DK(IV)", 20221001, [[Hekili:DAvxVrQnu0FlRwP08XczystAsvsEOQQsjRuEzQ2hbBGldwdyJSndAQI8V9ETjDgddKnPVKmCTVN7X3po2XrX)D8QCQgIFz5ILlJwSikm6MLrxFx8k9UgiEvdnBdDn(doTg)7FjfkTH8NF3qo9PFCMD9DvcAUfhLOvMH7PuRBu)(Lx211fYY2fSfyCvyMO(YoHUAtqwfvPyzxwyXkihO6YGnC26s8JgvqZwiqk0untWdYeIQCrhxfqtzvmnduXRsBzv6N4XPtW9OBrI0azXVCdYewEo0VpqLnG9nsMqY07mKuQcYneb3qEkd)(hw6(lgY6wwoeINqPOGvHNRV(vd5)qWsAd57owBtf7D8mZZ29zzuq0IGfrMNnptZShgvyJeW0qkvFXdxMwje5jOffWZGP3tPqYtefjDmUgKFJv8qABrr4qZH28Jxuq)Qz88Kcja)d4BglgjArBwPfPVKl0HUsqsbSfHrZY2W4R9DOu0vHMssXkM2606QDnLHdmhcCAAfKFYhbWMk66wirPLSnWEw8wQWT2KEbknwbW0K1LzcZjZH0jwG2cjJ87cpZ(UD)YZ1sKJVTmWHASPZNoT8ujq3yp1juzTq6VypuAAJRA5(q2YbS)VvkbU((L(7wKI90GeBIN)82NZZzkaBu3NT)0zHth7HeWoevPfUxF9i38w9mFUb1nIoq6oujDaTrWN5KErFWgARLxkQ2nkLC1GSRcsWCs9GuEgTQkP)ZKkg2lAvJEGkGVzBLY0pezjXWs2Jr(i0tMdnEUbPnSkxJCnnRKXHW2M3T735JBSYAUqSEKd9jH(ymxS9Ldq(pomJx0PoMqXX5CiJUZnYul2AlOfwTNejutrzNhrzpSOQqx7LdxC3YBcJIx1rLCC3OQ5tyLtQTsDxzi9rXqSjtvO554vUFzLXXaJ)7f3vd9Bdfs95y8Q3AcJ)Jyngn7gpyzvM02sZOXR(IH0Zvd5edzaFnKhnKBpeGrNtexT1ybTTsFeB8K3(mCzMrMd4UxF0c1vZc17ic6oOFKqnmHIH7x)zmFQH6d4nqy1I31ZI3CY0wQpRASDXP1rnKlgSKV7gY94vHgY5gYeAQESFVGNL634xRpsSDuf)3M9CoHKupFoa(EXAls36h2dcZJI3D)K2Ir607ZQ)VY4NESVE6YgYRVobad2XzZLKJw85sCyrEc9CN9P00Dz6Roe8jU2WXIbZ17L(hLZJMFSEyhLtvbf96VuWQASh7X3G0l4L0)QwRKND7ZpZpZ1fhW3xJ3H18d0tDnY7OmeDTFoY)oMXPPbdodi0GnQTVP9ThzEK26WNL(HLxN7DP(Nl)fD0ajcTvxANPXhqh4E)SZC8)c]] )
+spec:RegisterPack( "血冰(黑科研)", 20250820, [[Hekili:fFvBpTTvu4Fl7lten10K0gkvQ0pmnnPXK6x8(wvT9123KyHJVr(LgLPkRqBdnbs5LogSrPcyfwPDRaTsJ2gsu)XSCDC(e)f25A3qmH4uXKMMekkCVN7ZZ55Co3Z9e(K8)apNcYcZFRujsLoXePsepzI0xpvkEoRsfW8CfqYtJYcFrhLh(0B7Y0zpCSUhVCNxSCNTwjgZIsAeKcdjtITHmyfpNKTQM13PZlDw4tmophY2khXGN7BXQLS155YPQOGdSeBkZZb4)nF)jnRt3Sr7gleqiDNx69xZFsZQjtF50JF5eN0SgyH3JpGw7(0Nu3T280DxJo3wDlVP3JEf9DVXDHxqREeCa312YDXL6o7tGJ4mLZuTBTHx5kN0CDVLFJ7B)G7817(SFZzk6(1PR(qy5aLrN7PG468YJCRv(2DF(cDF6RUdpNMQPLPFedNbzRzbF9wj79HfphwhjPHv4)AEoBtSqXCQAybzKPLQEwMrCizlvcizDvldIGeHWWZ3wsMmczLv8Ts2q1cBOI85HbHfYil2sq1uasbwqSK5dHiR)bYQvQqU4kQMyKjo(NmXr8lDeviwXZyaekKbFxSrClv5Pb3609K0iefHcAOS24ZS5yN)Sg48ivDthXB4iEvhX7DVHaXa2eRV4lGHaIgwx2xlxjsTizNjdqlg)JGRiKHKnUDbFpIb0DXcyDCEvmWWnDedfBZrkQXoGKge4zmC1iz4lImS0hov5scweB5CmOs)5GAyrXqk3FDbtld1P9f)4rI3yzni2fG8DEjSrGgt7l(GAH4AG3Q5iojKFUuYyq81rKya)Zah7gt27CsetZqjbdeuJiOGH7TGFCTO9J)TvoX6v8a)zzaQEyzTWPZbOXVWzOhmwqf3fb3WU4iboYY0j(FltzRlzGrtZywazKh6CcUZ1J2DgliiAyRJnJlBByG1TCe)khrB9CeTsdUXnbEt2lKg5fDMvJp8m(zTjwSHEfDYZCfLiPXCx27cGwsMyuvFbCDE1CXujKYVYP1K)3KXcLYW5lqkIn8DcHIyubyrMqtgPqVGT0sg9laJ6c7qBupWn2r7jbNuIOQ57gFMM3tRQ5735rY5u1X96FpSg7JsSr3apcw6dwqyOFd3Kr3b)I6vr37wMq0uif1JdJ5OdVSluuv3Y)2esPu)iW52T)dMPdtCyR8zo6U1qbNQSGFXxOB4WdWjgrij6wBr3oWr8AFUUbGjdw3eI0OBGnunaXKjsmIGcm8vbdSmjVe60PYgGCyFt)U5HODKZsnSKelTos3aCeiszY2o0iVfrg6q1dmRN7R3PBLh3P1(UR(O2hFuNMnOhUm9Gp0T86DwzVU7Ei9NMPZ6p0DLdCRpZFx((0JB4T)(UhSy73)Q2n)fALQDA8IUpOv3nk797ZqRxXD()eMAfMSv8soI3UDRpcW0P2lbyUdBg66vOl9hTp(42T(z33UT7g1cwHUXENIw73)AGXaQHJ4wDvya5EagSCY7adz)PVNIHR3h)v3TEhDM1PhoR7c7594LanqBSsGjEpVcDNh5U1IHHgeJZuUvxIo3M0dAsRSB7gZMcuL7CL9EqlA1182EpFByPscBUx2VJWSawMnNelYY)pp]] )
 
-spec:RegisterPack( "冰霜DK(wowtbc.gg)", 20221003, [[Hekili:vAvxVTTnu0FlffWibPr(RMK1b78WWWaAkq2dQa7njrrDTfHLifiPQHhm4V9DjvSnPSuAhqrJc5LN73NtsMN89K4cIgsEDXSflMpB2YOzF5Zlx(usS(qdKe3qO7iBXp4KA8))lPqPnz)53S3COsqkSiOeTskEBPw3O(9Pt3l2RZPrB3IFPR2nLwruQ732Yka10nwiUVai6Y73XzBl1ttIZBzv6VYtYhmCwSa9rdqtE9r0jSIcOZsqrtI)EjtzYAKmHKPpyYS)worbfMS2gb3KPlbt25qYK9ps01Mmx4eLexXuALRoaBiTvA8ZxD1fcvZe8K4AgViDJeG)ftrGtYRGIK)irJbP1SlNetXiaKmss8hmzfcDKlxt3a)aKrAgDhJV9cUm6HuTOLwAHA5pdQ8kHOiTPISTfUgRUZtvAjBhyX7Z(zqlpxcKDwWtjYAHSxE8GVXnIUFgyXJbWPGum6Qv9m6PrZHUGx2YbveTvkbooeTYKT4cODMOjnwK(nF3jYRS4yhlc93xg1FJu7nztgVy6U8gtM1T)as7bHlCF7kGd1mahZoEmWCFuh1(TvhAkJkykaNrJEl6p57(XTeQjmUYb2dDV)QWVNn3I)ZRzcknRc4u3qX8z))6q3zY6IMRpVLxkQomqlD5fNd1nI9G0zu6EGGBJUOy(Orr)c2ZMS5UAtE7Mnr7yvvyJkTMqlzCiQT5IVkf7D3LJunANxgF5SVxw)l7LUQXLTS5JV26WsYQ)zHzWIAa(Hd7ZdwslfsEQyt6Egh9xOPASTlbQOoNCHmZlgpTGJ0A40HSfH0smC64E8aVlnNljrNPStyrfI98(l0NU8mh3PRLeCfifLbk6LObfeNmrkbjGlak5W7XBHeBhSLeKUFiyFC0Kahpz0u3OAeQbWOmD3K3SrR3Ni7EpotxJyprYX(nYu(vCzqQTR6l6igSstoTNiZlisT6slV8zDkBtuSb3DtI)4hnzNeEbN213C6MiLXzZV18I1SLMS)MQf5wclReQ5fZlDotfDEO4U1t7c4pzf1xp4CWWplSN(j2M1xpbm8lV0Uh((En6HnQFlEyRc7v2GCGo8ZZN9EvgV6gEM3FbG)XNfWT(4dJP549Gav6ZpAqXiVxDL6DaKHDlR5NuN9p8S6QRNDnx)Qf(wFrXnWvN1sSGms6ozSmAYnVr727HRczJpE0ZmFCUYUbfsNCZisORE44XXKox9WT36NOdOBnsz7UbKhVBiPXvl9DqGkGf6WC755tgrjYheFTIRXy9Vegxfi(QwJ5Sqa6XlQts(V)]] )
-
-spec:RegisterPack( "邪恶(IV)", 20220926.3, [[Hekili:TAv0Ujoou0Vf0if1oDskqNYqxb9Hv7lTRuFHzNhtIXXawKehf7aIri)TVx7uc2b72z7oVurJTp3JV(CV3t8O4VhVidjiXVmE44XdFy8KOXJUF49XlehQiXlQq4TO1WpkrfWF)NYnS8dY0RE6hxRw8qodLPWGZAQXWg2iev8)42B3VFFefFiChHwYJWSIB3Ze5BdX5ioNIVTrduygbj2eUTKUEJimRIhwTJewZeibLvgIzS8m2(sEiAjnNkOeE8ILn0CXtLXlDs8Vof4sfbh)YeGm0Sms7ojCC8IVVHYLPv1uwnva3c1)TeXjzYuwPmvSHitFcdl8dfRLPRBOzKO4f5uUGRZuKvOMCb8Zx0zoewXZ4ff0YSKv1eYpHuaPeTmNKf)NXcGCQTD(llWqKj1uu8IbY0mMiAzoJLLuLJw3qIeu8wA5AzAaWgu9AIa(ubjrWsYOa5ECUmD0q9YRuPSKAsbst12voZOwat4IA6wIIi39EezvnJlswr2rQ)nYdqdaNQbVrXHV6LdVfbEZS0vYuvO2rs6bHmDw3sKssbODKPhpATDtuDU)RnsOeUGMtkX6S59EVj9H4riFOzkKMly7oX7(Pnz60ZXsxvKGanvgbJoOc4KFZPovMOhhMzXH2JDw)8nt9ohdL7R7Kx2s(PEPAlM1nLeOLqtDnPuitbbZW(HvGQui9GvmBkkyLjRb5i7qE)GcAoFrTcuVR3WAYJAQodN(lQA2YFQtWJSkOB4Ke48f8(HXF9mCTO4Kk2E4na6tqXu4YntvoCF)xwmJMRrZFr5YMvRI2WQltyRs2tlfkuHwHNHYErnC(RVaXNgXxfd1eUsjdjeTmPfYOEz42sEof2OwCSgd9j)SmDS(mN6nh19If9QsQ)J5POPPO)cNoajf6KOwNKSNGQaQvtqzh0X1RgQTSsxi4B12HoVTaeJaQMNOYwTVcjTt(SeMJ8xoAKMv5e1n6uJkNu)gpK(gF0fEjUZQZKJ8LMJF7xsQ2Hl0cAYqVk1PMvhNBQ3R6WQG1EeuVXIdn3PvVgRnkayQjG9HLOZtD9N37e2DP9ovvFXTwrzuW3MRn1Q(l19eRb)6H7Ykd)TceiySJiQaXHpOQ41TU4rN2ChO1ik02cE4YCnSLbn)4eX5TVdbWVu1jDhkVH8)zsIlpcZATi4EqJYIae)xRTYaEd2W4jST63CGKq85kwA4UlEXEuDjetOdZtGMVwOmUn(u7lzQ2MwK8zLMHTIQUzF6tY0tEw)lLIwM(3AZMklSDo9Uw(SAJQqfo8HWXtKplFUfvEuN(7M532tL8f6Q5xQfcEBrGBKTfeEaEWhb5ZQcfQVJyYneNukFr9Cn3416lALZCpcNaFIMJhVuWmB0WJhTekWxmEhaAy4Y28Zw9zu3Xb(IBWLH9X5Jggyfw1xmHVRzxh0UUQFeKpBPub9)1KyWvVA1S3bNz7a94rJTzItV9DTjZ6zavrp7D)4OGbTUz7DfNAcJzF9pYvSVGWcCBpOxgwy6RUm6YHUZTEf6vkzUKPhrfwMojn3xNBXlZHQbOQJ6WD4S5JU38a2g66Ab4We4LxwZghdC70lO9mVHlVzGdVppoWVZoZ4A4tQTTGvw)9nZf48HjWHxi4RUCcz)k6ioDzqB3ybx5iY34iU34kQZUZrHIRh5x3)JtC3mXBdmF1pWC7gbOfGzFDZT0JkJ)3p]] )
+spec:RegisterPack( "双光环(黑科研)", 20250820, [[Hekili:DA1xRTXrq8pl9LA5wqCs2soTKgO)bk2POcvM2cLC7TAV50T4t7EDV9IQcHfdT5HemjeiKhAmLg6dLgkPqFOV02VnvXrp1VcD29SoFs(ozOViFENz)nZoZV53U(D8p0Fyivd(d661TN31661UJxV(721FOEwk4pmLYoIog)qqNG)o)rNm)E3)Sh(BTw8Np(SF(XN9JpzBRtZsK0qlyzYCfdD0F4OCEIEFH)OvJGxF0PuG5pa)iMhgcfUazm)HTM)YFyXloz7YW8r38qZbMd(N)(0xF89(3)67lI68h8mmWN9l)XRU)XF1R(2FD(tp9wMdM)YtM)0VRENw8tpCXZEXT8hMWZ0z2eLkb8pdCvaktZLcBsq1XeQiKecm6m)HGGokbc9)aFnM)wxVyLHmfxdko1F4ByccL62rkzMMeb3guT1C2rCX4lWMZMr0YCwmUXzSeGOPQXaMlykGGVZvb(OePmKKMqhNdxg9I1jzAf)iO(iSBJrOHC3e8MnhANXwMaBcCBGSgeMG3EftvrWeCDtGwHz75oacychYmbVLjORjy7kNkitZtabsOWdqVgpaXanrh3oLPnb3We03BTSRmc3WfH7Extawv1ueADBCZk95vU2Nd)kzrrYpsYtWSqBzjr08e9s2J7h9kzwEgqMgJzoHrXta2OqNkXtW1kjIN0YeD(kJIiJzHoVQ0wGiEzxKWZitGsA4sSMWrYAKcG7aRXw3P(uBvQEjFP2s51FpSC5TK7SbWu5cBEMUjG21BzpCdavqHsvqMRPxbUr5rrTx1C7q5uHf0(BGzJEuIESujWAnzkxG2T7CV12zLdeP4BIvWavSWcftVwdQg2vNcfgsHAPvJb301AokqnTaCzoJKkNIJISCLcjPoS75QGVtdG1udTyDBOYCtEDRFSop1cEhVn3FQkIvgb3g7unTgTI51gKS8e7oAwoTOn7s5lkaifY7cOGjU6JZjYuGMkDmHo7uD4ixeltMzhpe3zw1SZ6zZYH)peCTa2S80g1qVKrfGjCwSfNcPQRsEUQTkBUjz0o9RwJkc9sAZkkiD2REYWvXuXo1EERtmzLYN44ltozeTuaTESDd8RoQ3KmHUay88Nznx5HgtPkbwQqz2V49)Sb7p4JFxtGj4WySYYrgKct3ijEB1w4K6wMaf815CLv(ptob9HMRLtW3UGlWIPIXiF0CWNWfOPEisFOuGX0zERZVm5lru0Yk))YBuW1B15B2UT91m77cTDB7uCfLuycCpmbnBlqsRWV7nu0mi8tXt8IF)0x)8JBT)NBVxkxJkzU5oTV))b]] )
 
 
-
-spec:RegisterPackSelector( "blood", "Blood (IV)", "|T135770:0|t Blood",
+spec:RegisterPackSelector( "blood", "鲜血(IV)", "|T135770:0|t 鲜血",
     "如果你在|T135770:0|t鲜血天赋中投入的点数多于其他天赋，将会为你自动选择该优先级。",
     function( tab1, tab2, tab3 )
-        return tab1 > max( tab2, tab3 )
+        return tab1 > max( tab2, tab3 ) and talent.abominations_might.rank == 0
     end )
 
-spec:RegisterPackSelector( "frost", "Frost DK (IV)", "|T135773:0|t Frost",
+spec:RegisterPackSelector( "blood_frost", "血冰(黑科研)", "|T135773:0|t 血冰",
     "如果你在|T135773:0|t冰霜天赋中投入的点数多于其他天赋，将会为你自动选择该优先级。",
     function( tab1, tab2, tab3 )
-        return tab2 > max( tab1, tab3 )
+        return tab2 > max( tab1, tab3 ) and tab1 > tab3
     end )
 
-spec:RegisterPackSelector( "unholy", "Unholy (IV)", "|T135775:0|t Unholy",
+spec:RegisterPackSelector( "unholy_frost", "邪冰(黑科研)", "|T135773:0|t 邪冰",
+    "如果你在|T135773:0|t冰霜天赋中投入的点数多于其他天赋，将会为你自动选择该优先级。",
+    function( tab1, tab2, tab3 )
+        return tab2 > max( tab1, tab3 ) and tab3 > tab1
+    end )
+
+spec:RegisterPackSelector( "unholy", "双持邪(新手盒子)", "|T135775:0|t 邪恶",
     "如果你在|T135775:0|t邪恶天赋中投入的点数多于其他天赋，将会为你自动选择该优先级。",
     function( tab1, tab2, tab3 )
         return tab3 > max( tab1, tab2 )
     end )
+
+spec:RegisterPackSelector( "dual_auras", "双光环(黑科研)", "|T135775:0|t 双光环",
+    "如果你在|T135775:0|t邪恶天赋中投入的点数多于其他天赋，将会为你自动选择该优先级。",
+    function( tab1, tab2, tab3 )
+        return tab1 > max( tab2, tab3 ) and talent.improved_icy_talons.rank == 1 and talent.abominations_might.rank > 0
+    end )    
+
+-- 增加shouldPestilence函数，判断传染逻辑。by 风雪20250410
+
+local LibRangeCheck = LibStub("LibRangeCheck-2.0")
+
+local function hasMissingDisease(unit, spellIDs)
+    for i = 1, 40 do
+        local _, _, _, _, _, _, source, _, _, spellId = UnitDebuff(unit, i)
+        if source and UnitIsUnit(source, "player") then
+            for _, id in pairs(spellIDs) do
+                if spellId == id then return false end
+            end
+        end
+    end
+    return true
+end
+
+spec:RegisterStateExpr("shouldPestilence", function()
+    local diseaseIDs = {55095, 55078} -- 冰霜疫病和血之疫病
+    for _, plate in ipairs(C_NamePlate.GetNamePlates()) do
+        local unit = plate.namePlateUnitToken
+        if unit and UnitCanAttack("player", unit) then
+            local _, maxRange = LibRangeCheck:GetRange(unit)
+            -- 修改为获取目标到当前单位的距离
+            -- local _, maxRange = LibRangeCheck:GetRange("target", unit)
+            if maxRange and maxRange <= 10 and hasMissingDisease(unit, diseaseIDs) then
+                return true
+            end
+        end
+    end
+    return false
+end)
+
+-- 判断传染逻辑结束。
+
+-- 新增death_runes函数，对可用死亡符文计数，不是通用的death_runes.current等函数。by 风雪20250411
+
+spec:RegisterStateExpr("death_runes", function()
+    local count = 0
+    for i = 1, 6 do
+        if GetRuneType(i) == 4 and select(3, GetRuneCooldown(i)) then
+            count = count + 1
+        end
+    end
+    return count
+end)
