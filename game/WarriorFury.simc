@@ -41,11 +41,12 @@ actions.slayer+=/recklessness,if=fight_remains>30
 actions.slayer+=/avatar,if=(spell_targets.whirlwind>=5|boss)&fight_remains>30
 actions.slayer+=/whirlwind,if=active_enemies>=2&talent.meat_cleaver&buff.meat_cleaver.stack=0
 actions.slayer+=/rampage,if=buff.enrage.remains<gcd
-actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=15&(buff.avatar.up|cooldown.avatar.remains>=8))&fight_remains>40&spell_targets.bladestorm>=5
+actions.slayer+=/bladestorm,if=buff.enrage.up&(talent.reckless_abandon&cooldown.avatar.remains>=24|talent.anger_management&cooldown.recklessness.remains>=15&(buff.avatar.up|cooldown.avatar.remains>=8))&fight_remains>60&spell_targets.bladestorm>=5
 actions.slayer+=/raging_blow,if=buff.opportunist.up
 actions.slayer+=/raging_blow,if=action.raging_blow.charges=2
 actions.slayer+=/execute,if=debuff.marked_for_execution.stack>1&buff.enrage.up
 actions.slayer+=/rampage,if=action.raging_blow.charges=0
+actions.slayer+=/thunderous_roar
 actions.slayer+=/execute,if=action.raging_blow.charges=0
 actions.slayer+=/bloodthirst,if=action.raging_blow.charges=0
 actions.slayer+=/raging_blow
