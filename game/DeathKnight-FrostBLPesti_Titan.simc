@@ -15,10 +15,10 @@ actions+=/plague_strike,if=!dot.blood_plague.ticking
 actions+=/pestilence,if=dot.frost_fever.ticking&((true_active_enemies>1&active_dot.frost_fever<true_active_enemies)|(true_active_enemies>1&active_dot.blood_plague<true_active_enemies))
 # 铜墙铁壁
 actions+=/unbreakable_armor,if=fight_remains>30
+# 凛风冲击
+actions+=/howling_blast,if=active_enemies>2
 # 湮灭
 actions+=/obliterate,if=(frost_runes.current+unholy_runes.current>=1)|(dot.frost_fever.remains>=6&dot.blood_plague.remains>=6)
-# 凛风冲击
-actions+=/howling_blast,if=active_enemies>1
 # 符文武器增效
 actions+=/empower_rune_weapon,if=frost_runes.current=0&unholy_runes.current=0&blood_runes.current=0&runic_power<30
 # 符文分流 不使用，跟铜墙铁壁一起绑宏
