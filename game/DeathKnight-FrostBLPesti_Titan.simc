@@ -37,4 +37,3 @@ actions+=/frost_strike,if=runic_power.current>40
 actions+=/blood_strike,if=blood_runes.current > 1
 # 寒冬号角
 actions+=/horn_of_winter,if=runic_power.current<80
-
