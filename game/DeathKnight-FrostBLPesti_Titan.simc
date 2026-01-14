@@ -1,0 +1,39 @@
+## Precombat
+actions.precombat+=/blood_presence,if=buff.presence.down
+actions.precombat+=/horn_of_winter,if=buff.horn_of_winter.down
+
+## Default
+# 传染
+actions+=/pestilence,if=dot.frost_fever.ticking&dot.frost_fever.remains<4
+# 凛风冲击 白霜、多目标
+actions+=/howling_blast,if=buff.freezing_fog.up&active_enemies>1
+# 冰冷触摸
+actions+=/icy_touch,if=!dot.frost_fever.ticking
+# 暗影打击
+actions+=/plague_strike,if=!dot.blood_plague.ticking
+# 传染
+actions+=/pestilence,if=dot.frost_fever.ticking&((true_active_enemies>1&active_dot.frost_fever<true_active_enemies)|(true_active_enemies>1&active_dot.blood_plague<true_active_enemies))
+# 铜墙铁壁
+actions+=/unbreakable_armor,if=fight_remains>30
+# 凛风冲击
+actions+=/howling_blast,if=active_enemies>2
+# 湮灭
+actions+=/obliterate,if=(frost_runes.current+unholy_runes.current>=1)|(dot.frost_fever.remains>=6&dot.blood_plague.remains>=6)
+# 符文武器增效
+actions+=/empower_rune_weapon,if=frost_runes.current=0&unholy_runes.current=0&blood_runes.current=0&runic_power<30
+# 符文分流 不使用，跟铜墙铁壁一起绑宏
+# actions+=/blood_tap,if=prev_off_gcd.1.unbreakable_armor
+# 凛风冲击
+actions+=/howling_blast,if=buff.killing_machine.up&buff.freezing_fog.up
+# 冰霜打击
+actions+=/frost_strike,if=buff.killing_machine.up
+# 凛风冲击
+actions+=/howling_blast,if=buff.freezing_fog.up
+# 寒冬号角
+actions+=/horn_of_winter,if=cooldown.horn_of_winter.ready&buff.horn_of_winter.remains<5
+# 冰霜打击
+actions+=/frost_strike,if=runic_power.current>40
+# 鲜血打击
+actions+=/blood_strike,if=blood_runes.current > 1
+# 寒冬号角
+actions+=/horn_of_winter,if=runic_power.current<80
