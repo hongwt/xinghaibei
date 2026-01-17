@@ -27,7 +27,6 @@ actions.init+=/variable,name=weave_now,value=settings.weaving_enabled&(variable.
 
 # 血性狂暴
 actions.berserker_stance+=/bloodrage,use_off_gcd=1,if=rage.deficit>20
-actions.berserker_stance+=/berserker_rage,if=rage.deficit>20
 # 英勇打击
 actions.berserker_stance+=/heroic_strike,use_off_gcd=1,if=rage.current>=settings.queueing_threshold&active_enemies=1&!buff.recklessness.up&(!variable.execute_phase|settings.execute_queueing_enabled)
 # 顺劈斩
@@ -35,7 +34,7 @@ actions.berserker_stance+=/cleave,use_off_gcd=1,if=active_enemies>1
 # 破甲
 actions.berserker_stance+=/sunder_armor,if=variable.should_sunder&(variable.build_sunder|variable.maintain_sunder)
 # 死亡之愿
-actions.berserker_stance+=/death_wish,if=debuff.major_armor_reduction.up&!debuff.sunder_armor.up|debuff.sunder_armor.stack=5
+actions.berserker_stance+=/death_wish,if=(debuff.major_armor_reduction.up&!debuff.sunder_armor.up|debuff.sunder_armor.stack=5)&fight_remains>30
 actions.berserker_stance+=/use_items,use_off_gcd=1
 # 超级加速器
 actions.berserker_stance+=/hyperspeed_acceleration,use_off_gcd=1
@@ -54,6 +53,10 @@ actions.berserker_stance+=/recklessness,if=(buff.death_wish.up|debuff.shattering
 # 斩杀
 actions.berserker_stance+=/execute,if=boss|active_enemies=1
 actions.berserker_stance+=/slam,if=buff.bloodsurge.up
+# 乘胜追击
+actions.berserker_stance+=/victory_rush
+# 狂暴之怒
+actions.berserker_stance+=/berserker_rage,if=rage.deficit>20
 # 挫志怒吼
 actions.berserker_stance+=/demoralizing_shout,if=settings.debuff_demoshout_enabled&!debuff.demoralizing_shout.up
 actions.berserker_stance+=/battle_stance,use_off_gcd=1,if=variable.weave_now
