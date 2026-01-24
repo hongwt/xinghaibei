@@ -46,6 +46,8 @@ actions.berserker_stance+=/whirlwind,if=variable.should_whirlwind&main_gcd_spell
 actions.berserker_stance+=/slam,if=buff.bloodsurge.up&variable.should_slam_over_execute
 actions.berserker_stance+=/bloodthirst,if=variable.should_bloodthirst
 actions.berserker_stance+=/whirlwind,if=variable.should_whirlwind
+# 乘胜追击
+actions.berserker_stance+=/victory_rush
 # 嗜血
 actions.berserker_stance+=/bloodthirst,if=variable.should_bloodthirst&main_gcd_spell_bt
 # 鲁莽
@@ -53,8 +55,6 @@ actions.berserker_stance+=/recklessness,if=(buff.death_wish.up|debuff.shattering
 # 斩杀
 actions.berserker_stance+=/execute,if=boss|active_enemies=1
 actions.berserker_stance+=/slam,if=buff.bloodsurge.up
-# 乘胜追击
-actions.berserker_stance+=/victory_rush
 # 狂暴之怒
 actions.berserker_stance+=/berserker_rage,if=rage.deficit>20
 # 挫志怒吼
